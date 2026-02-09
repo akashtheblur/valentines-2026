@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dear Jigi</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      color: #b30059;
+      margin-bottom: 40px;
+      z-index: 2;
+    }
+
+    button {
+      font-size: 1.5rem;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 12px;
+      background-color: #ff4d88;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      z-index: 2;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 28px;
+      opacity: 0.8;
+      z-index: 1;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Dear Jigi,<br>I have an important question</h1>
+
+  <button onclick="goNext()">Next</button>
+
+  <script>
+    function goNext() {
+      window.location.href = "question.html";
+    }
+
+    /*
+      Safe zone:
+      - Center 50% width
+      - Center 40% height
+      Hearts will only appear OUTSIDE this zone
+    */
+
+    function randomPositionOutsideCenter() {
+      let top, left;
+
+      while (true) {
+        top = Math.random() * 100;
+        left = Math.random() * 100;
+
+        const inCenterX = left > 25 && left < 75;
+        const inCenterY = top > 30 && top < 70;
+
+        if (!(inCenterX && inCenterY)) {
+          break;
+        }
+      }
+
+      return { top, left };
+    }
+
+    for (let i = 0; i < 18; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤️";
+
+      const pos = randomPositionOutsideCenter();
+      heart.style.top = pos.top + "vh";
+      heart.style.left = pos.left + "vw";
+      heart.style.fontSize = Math.random() * 15 + 20 + "px";
+
+      document.body.appendChild(heart);
+    }
+  </script>
+
+</body>
+</html>

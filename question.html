@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine Question</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 4rem;
+      color: #b30059;
+      margin-bottom: 50px;
+      z-index: 2;
+    }
+
+    button {
+      font-size: 1.6rem;
+      padding: 15px 40px;
+      margin: 15px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 2;
+    }
+
+    #yesBtn {
+      background-color: #ff4d88;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #777;
+      color: white;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 28px;
+      opacity: 0.8;
+      z-index: 1;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Will you be my Valentine?</h1>
+
+  <div>
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <script>
+    // 🔴 PASTE YOUR FORMSPREE URL HERE
+    const FORMSPREE_URL = "https://formspree.io/f/mkovgkzj";
+
+    let yesScale = 1;
+    let noScale = 1;
+    let yesCount = 0;
+    let noCount = 0;
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+
+    function sendEmail(choice, count) {
+      fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          choice: choice,
+          count: count
+        })
+      });
+    }
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+
+      yesScale += 0.25;
+      noScale -= 0.15;
+
+      yesBtn.style.transform = `scale(${yesScale})`;
+      noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
+
+      sendEmail("NO", noCount);
+    });
+
+    yesBtn.addEventListener("click", () => {
+      yesCount++;
+      sendEmail("YES", yesCount);
+
+      // slight delay so email sends before redirect
+      setTimeout(() => {
+        window.location.href = "yay.html";
+      }, 300);
+    });
+
+    // heart placement (same safe-zone logic as before)
+    function randomPositionOutsideCenter() {
+      let top, left;
+
+      while (true) {
+        top = Math.random() * 100;
+        left = Math.random() * 100;
+
+        const inCenterX = left > 25 && left < 75;
+        const inCenterY = top > 30 && top < 70;
+
+        if (!(inCenterX && inCenterY)) break;
+      }
+
+      return { top, left };
+    }
+
+    for (let i = 0; i < 18; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤️";
+
+      const pos = randomPositionOutsideCenter();
+      heart.style.top = pos.top + "vh";
+      heart.style.left = pos.left + "vw";
+      heart.style.fontSize = Math.random() * 15 + 20 + "px";
+
+      document.body.appendChild(heart);
+    }
+  </script>
+
+</body>
+</html>
